@@ -12,6 +12,13 @@ builder.Services.AddDbContext<NotesDbContext>(options =>
 
 var app = builder.Build();
 
+// Ensure database is created and migrations are applied
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<NotesDbContext>();
+    context.Database.Migrate();
+}
+
 // Configure middleware pipeline
 app.UseStaticFiles();
 app.UseRouting();
